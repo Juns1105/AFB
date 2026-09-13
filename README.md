@@ -4,7 +4,7 @@ Official PyTorch implementation of the BMVC 2025 paper
 
 **Learning Event-guided Exposure-agnostic Video Frame Interpolation via Adaptive Feature Blending**<br>
 Junsik Jung, Yoonki Cho, Woo Jae Kim, Lin Wang, Sung-eui Yoon<br>
-[[arXiv]](https://arxiv.org/abs/2510.22565)
+[[Project Page]](https://sgvr.kaist.ac.kr/~jsjung/AFB/index.html) [[arXiv]](https://arxiv.org/abs/2510.22565)
 
 ## Overview
 
