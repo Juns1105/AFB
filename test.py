@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from torchvision.utils import save_image
 from tqdm import tqdm
 
-from data import GoProTestDataset
+from data import GoProDataset
 from models import AFB
 from utils.metrics import AverageMeter, evaluate_frame
 
@@ -59,8 +59,8 @@ def main():
     if args.save_images and args.save_dir is None:
         raise ValueError('--save_images requires --save_dir')
 
-    dataset = GoProTestDataset(args.data_dir, num_bins=args.num_frames, left_m=args.left_m,
-                               right_m=args.right_m, video_name=args.video_name)
+    dataset = GoProDataset(args.data_dir, num_bins=args.num_frames, split='test', left_m=args.left_m,
+                           right_m=args.right_m, video_name=args.video_name)
     loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers,
                         pin_memory=True, generator=torch.Generator().manual_seed(args.seed))
 

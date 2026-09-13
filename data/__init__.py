@@ -1,3 +1,3 @@
-from .gopro import GoProTestDataset
+from .gopro import GoProDataset
 
-__all__ = ['GoProTestDataset']
+__all__ = ['GoProDataset']

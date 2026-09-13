@@ -26,9 +26,10 @@ AFB
 │   ├── modules.py      # encoders, cross-modal fusion, decoder, positional encoding
 │   └── refine.py       # refinement network
 ├── data/               # GoPro dataset and event stacking
-├── utils/metrics.py    # PSNR / SSIM / LPIPS
+├── utils/              # Charbonnier loss, PSNR / SSIM / LPIPS
+├── train.py            # training
 ├── test.py             # evaluation
-└── scripts/test_gopro.sh
+└── scripts/            # training and evaluation scripts
 ```
 
 ## Installation
@@ -45,7 +46,7 @@ pip install -r requirements.txt
 We use GoPro at 180×320 with synthetic events from ESIM. Consecutive shutter periods are packed into `.npz` files:
 
 ```
-<data_dir>/test/<video>/<xxxxxx_yyyyyy>.npz
+<data_dir>/{train,test}/<video>/<xxxxxx_yyyyyy>.npz
     left_frames, right_frames   dict {i: (H, W, 3) uint8 BGR sharp frame}, one entry per frame of the shutter period
     left_event,  right_event    dict {'x', 'y', 't', 'p'} events recorded during each shutter period
 ```
@@ -65,6 +66,22 @@ mkdir -p checkpoints
 wget -P checkpoints https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_10down.pth
 wget -P checkpoints https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_16down.pth
 ```
+
+## Training
+
+```bash
+# GoPro-10⇓
+python train.py --data_dir <GoPro-10⇓ root> --num_frames 20 --exp_name afb_gopro_10down --batch_size 36 --multi_gpu
+
+# GoPro-16⇓
+python train.py --data_dir <GoPro-16⇓ root> --num_frames 32 --exp_name afb_gopro_16down --batch_size 36 --multi_gpu
+```
+
+The model is trained end-to-end for 300 epochs with AdamW (learning rate 5e-4, cosine annealing) and the
+Charbonnier loss on 128×128 crops. For every input, m is sampled randomly within the shutter period and the
+target timestamp randomly among all frames. After each epoch the model is validated at a fixed target
+timestamp (`--val_target`), and the checkpoint is saved to `<save_dir>/<exp_name>/models/` whenever the
+validation PSNR improves.
 
 ## Evaluation
 
