@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .vscode/
 .idea/
+.hypothesis/
 
 checkpoints/
 datasets/
