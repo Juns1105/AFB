@@ -99,16 +99,6 @@ python test.py --data_dir <GoPro-16⇓ root> --checkpoint checkpoints/afb_gopro_
 PSNR, SSIM and LPIPS are averaged over all restored frames. Use `--save_dir` to write the metrics and
 `--save_images` to also save the restored frames.
 
-## Results
-
-| GoPro-10⇓ | 9+1 | 5+5 | 1+9 | RandEx |
-|---|---|---|---|---|
-| PSNR / SSIM / LPIPS | 33.22 / 0.960 / 0.050 | 33.61 / 0.963 / 0.042 | 32.87 / 0.954 / 0.048 | 33.39 / 0.961 / 0.045 |
-
-| GoPro-16⇓ | 15+1 | 11+5 | 5+11 | 1+15 | RandEx |
-|---|---|---|---|---|---|
-| PSNR / SSIM / LPIPS | 30.97 / 0.937 / 0.081 | 31.39 / 0.941 / 0.074 | 31.18 / 0.938 / 0.075 | 30.07 / 0.925 / 0.085 | 31.14 / 0.938 / 0.076 |
-
 ## Citation
 
 ```bibtex
