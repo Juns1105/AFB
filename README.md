@@ -27,6 +27,8 @@ AFB
 │   └── refine.py       # refinement network
 ├── data/               # GoPro dataset and event stacking
 ├── utils/              # Charbonnier loss, PSNR / SSIM / LPIPS
+├── tools/
+│   └── data_preparation/   # GoPro frames -> events -> .npz
 ├── train.py            # training
 ├── test.py             # evaluation
 └── scripts/            # training and evaluation scripts
@@ -43,7 +45,8 @@ pip install -r requirements.txt
 
 ## Data
 
-We use GoPro at 180×320 with synthetic events from ESIM. Consecutive shutter periods are packed into `.npz` files:
+We use [GoPro](https://seungjunnah.github.io/Datasets/gopro) at 180×320 with events simulated by
+[ESIM](https://github.com/uzh-rpg/rpg_esim). Consecutive shutter periods are packed into `.npz` files:
 
 ```
 <data_dir>/{train,test}/<video>/<xxxxxx_yyyyyy>.npz
@@ -53,6 +56,32 @@ We use GoPro at 180×320 with synthetic events from ESIM. Consecutive shutter pe
 
 A shutter period contains 10 frames for **GoPro-10⇓** and 16 frames for **GoPro-16⇓**. The blurry inputs are
 synthesized on the fly by averaging the first m sharp frames of each period.
+
+### Preparation
+
+1. Download [`GOPRO_Large_all.zip`](https://huggingface.co/datasets/snah/GOPRO_Large/resolve/main/GOPRO_Large_all.zip)
+   (all 240 fps frames, see the [GoPro dataset page](https://seungjunnah.github.io/Datasets/gopro)) and downsample the frames to 320×180:
+   ```bash
+   wget https://huggingface.co/datasets/snah/GOPRO_Large/resolve/main/GOPRO_Large_all.zip && unzip GOPRO_Large_all.zip
+   python tools/data_preparation/downsample_gopro.py --input_dir GOPRO_Large_all --output_dir GOPRO_180_320
+   ```
+2. Temporally upsample the frames with the adaptive FILM interpolation of [rpg_vid2e](https://github.com/uzh-rpg/rpg_vid2e):
+   ```bash
+   # inside rpg_vid2e, for split in train test
+   python upsampling/upsample.py --input_dir GOPRO_180_320/$split --output_dir GOPRO_180_320_upsampled/$split
+   ```
+3. Simulate events with [ESIM](https://github.com/uzh-rpg/rpg_esim) (`esim_torch` from rpg_vid2e). The contrast
+   thresholds of each video are sampled from N(0.2, 0.03²):
+   ```bash
+   python tools/data_preparation/generate_events.py --input_dir GOPRO_180_320_upsampled --output_dir GOPRO_180_320_events
+   ```
+4. Pack the shutter periods for both settings:
+   ```bash
+   for period in 10 16; do
+       python tools/data_preparation/pack_npz.py --frames_dir GOPRO_180_320 --upsampled_dir GOPRO_180_320_upsampled \
+           --events_dir GOPRO_180_320_events --output_dir datasets/GoPro_${period}down --period $period
+   done
+   ```
 
 ## Pretrained Models
 
@@ -113,8 +142,9 @@ PSNR, SSIM and LPIPS are averaged over all restored frames. Use `--save_dir` to 
 ## Acknowledgements
 
 Our network is built upon [EFNet](https://github.com/AHupuJR/EFNet). We thank the authors for sharing their code.
-The refinement network is adapted from [EVDI](https://github.com/XiangZ-0/EVDI), and the event stacking from
-[event_utils](https://github.com/TimoStoff/event_utils).
+The refinement network is adapted from [EVDI](https://github.com/XiangZ-0/EVDI), the event stacking from
+[event_utils](https://github.com/TimoStoff/event_utils), and the events are simulated with
+[rpg_vid2e](https://github.com/uzh-rpg/rpg_vid2e).
 
 ## License
 
