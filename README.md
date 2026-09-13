@@ -55,12 +55,16 @@ synthesized on the fly by averaging the first m sharp frames of each period.
 
 ## Pretrained Models
 
-| Setting    | File                        | `--num_frames` |
-|------------|-----------------------------|----------------|
-| GoPro-10⇓  | `afb_gopro_10down.pth`      | 20             |
-| GoPro-16⇓  | `afb_gopro_16down.pth`      | 32             |
+| Setting    | Download                                                                                          | `--num_frames` |
+|------------|---------------------------------------------------------------------------------------------------|----------------|
+| GoPro-10⇓  | [afb_gopro_10down.pth](https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_10down.pth) | 20             |
+| GoPro-16⇓  | [afb_gopro_16down.pth](https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_16down.pth) | 32             |
 
-Place the weights under `checkpoints/`.
+```bash
+mkdir -p checkpoints
+wget -P checkpoints https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_10down.pth
+wget -P checkpoints https://github.com/Juns1105/AFB/releases/download/v1.0/afb_gopro_16down.pth
+```
 
 ## Evaluation
 
