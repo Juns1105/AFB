@@ -142,9 +142,7 @@ PSNR, SSIM and LPIPS are averaged over all restored frames. Use `--save_dir` to 
 ## Acknowledgements
 
 Our network is built upon [EFNet](https://github.com/AHupuJR/EFNet). We thank the authors for sharing their code.
-The refinement network is adapted from [EVDI](https://github.com/XiangZ-0/EVDI), the event stacking from
-[event_utils](https://github.com/TimoStoff/event_utils), and the events are simulated with
-[rpg_vid2e](https://github.com/uzh-rpg/rpg_vid2e).
+The refinement network is adapted from [EVDI](https://github.com/XiangZ-0/EVDI).
 
 ## License
 
